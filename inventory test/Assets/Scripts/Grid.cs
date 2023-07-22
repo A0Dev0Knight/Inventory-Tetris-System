@@ -84,4 +84,20 @@ public class Grid
         //Debug.Log("New value at " +x +" , "+y +" is "+ gridArray[x, y]);
 
     }
+
+    public int GetValue(int x, int y)
+    {
+        if (x >= 0 && x < width && y >= 0 && y < height)
+        {
+            return gridArray[x, y];
+        }
+        return -1;
+    }
+
+    public int GetValue(Vector3 worldPosition)
+    {
+        int x, y;
+        GetXY(worldPosition, out x, out y);
+        return GetValue(x, y);
+    }
 }

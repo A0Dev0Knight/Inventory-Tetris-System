@@ -22,6 +22,9 @@ public class Testing : MonoBehaviour
 
     //Boilerplated code or whatever the name is that gets the position of the mouse in relation
     //to the 3d space we have in our game
+
+    //somehow these lines of code only return (0,1) for the pointer position
+    //i cannot find for now the issue
     public Vector3 GetMouseWorldPosition()
     {
         Vector3 vector = GetMouseWorldPositionWithNullZ(Input.mousePosition, Camera.main);
