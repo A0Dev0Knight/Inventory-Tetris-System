@@ -36,7 +36,7 @@ public class Grid
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
 
-                Debug.Log(x + " " + y + " " + gridArray[x, y]);
+                //Debug.Log(x + " " + y + " " + gridArray[x, y]);
             }
 
         //Close the grid lines
@@ -45,7 +45,7 @@ public class Grid
 
         SetValue(1, 1, 50);
 
-        Debug.Log("AAAAAAAAAAAAAAAA " +gridArray[1,1]);
+        //Debug.Log("AAAAAAAAAAAAAAAA " +gridArray[1,1]);
     }
 
     //functions that hets the coordonates of the points in the grid and
@@ -57,7 +57,7 @@ public class Grid
 
 
     //Code that should modify the text that appears in a grid cell
-    private void SetValue(int x, int y, int value)
+    public void SetValue(int x, int y, int value)
     {
         if (x >= 0 && x < width && y >= 0 && y < height)
         {
@@ -65,6 +65,23 @@ public class Grid
             //debugArray[x, y].text = gridArray[x, y].ToString();
         }
 
+
+    }
+
+    //these two functions let ws press with the mouse on the grid and update the value of the grid
+    //press in a square, poz of cursor gets rounded to an int and so the positon of the mouse is detected
+    //to be inside a square of a grid
+    private void GetXY(Vector3 worldposition, out int x, out int y)
+    {
+        x = Mathf.FloorToInt(worldposition.x / cellSize);
+        y = Mathf.FloorToInt(worldposition.y / cellSize);
+    }
+    public void SetValue(Vector3 worldPosition, int value)
+    {
+        int x, y;
+        GetXY(worldPosition, out x, out y);
+        SetValue(x, y, value);
+        //Debug.Log("New value at " +x +" , "+y +" is "+ gridArray[x, y]);
 
     }
 }
