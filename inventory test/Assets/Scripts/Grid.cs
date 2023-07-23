@@ -38,8 +38,6 @@ public class Grid
 
                 // initialize the original value of the grid's cell with 0;
                 gridArray[x, y] = 0;
-
-                //Debug.Log("At (" + x + " " + y + ") " + "the value here is: " + gridArray[x, y]);
             }
 
         //Close the grid lines
@@ -88,12 +86,7 @@ public class Grid
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
-        Debug.Log(x + " " + y);
-
         SetValue(x, y, value);
-
-        Debug.Log("New value at " + x +" "+ y +" is "+ gridArray[x, y]);
-
     }
 
     //gets the value of grid cell
@@ -111,8 +104,6 @@ public class Grid
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
-        Debug.Log(x + " " + y);
-        Debug.Log("The value on" + x + " " + y + " is " + gridArray[x, y]);
         return GetValue(x, y);
     }
 
