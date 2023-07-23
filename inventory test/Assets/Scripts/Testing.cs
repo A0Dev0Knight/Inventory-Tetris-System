@@ -7,21 +7,27 @@ public class Testing : MonoBehaviour
     [SerializeField]
     Transform DebugSphere;
 
+    [SerializeField]
+    int ZMin = -10;
+
+    [SerializeField]
+    int ZMax = 10;
     Vector3 wordlPoseOfMouse;
 
     private Grid grid;
     private void Start()
     {
-        grid = new Grid(3, 2, 1, new Vector3(-1,-1,-1)/2);
+        grid = new Grid(3, 2, 1, Vector3.zero);
     }
     private void Update()
     {
         if (Input.GetMouseButton(0))
         {
             grid.SetValue(GetMousePos3D(), 100);
-            //magic code that thets the position of the cursor in the world
-            //use a 2d method for a 2d game or a 3d method for a 3d game
-            Debug.Log(GetMousePos3D());
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            grid.GetValue(GetMousePos3D());
         }
     }
 
@@ -37,6 +43,7 @@ public class Testing : MonoBehaviour
         return wordlPoseOfMouse;
     }
 
+    #region 2D get the cursor postin on screen
     /* GetworldPosition() 2D method
     //Boilerplated code or whatever the name is that gets the position of the mouse in relation
     //to the 3d space we have in our game
@@ -55,4 +62,5 @@ public class Testing : MonoBehaviour
         return worldposition;
     }
     */
+    #endregion
 }
