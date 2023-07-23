@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class Grid
+public class Grid<TGridObject>
 {
     //parameters of the grid
     private int width;
     private int height;
     private float cellSize;
-    private int[,] gridArray;
+    private TGridObject[,] gridArray;
 
     /// <summary>
     /// 
@@ -26,7 +26,7 @@ public class Grid
         this.originPosition = originPosition;
 
         //to have the values remembered somewhere
-        gridArray = new int[width, height];
+        gridArray = new TGridObject[width, height];
 
         //drawing the grid on the screen
         for (int x = 0; x < gridArray.GetLength(0); x++)
@@ -37,7 +37,7 @@ public class Grid
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
 
                 // initialize the original value of the grid's cell with 0;
-                gridArray[x, y] = 0;
+                Debug.Log(gridArray[x, y]);
             }
 
         //Close the grid lines
@@ -60,7 +60,7 @@ public class Grid
     #region Code that handles the set and get values of the grid
 
     //Code that modifys the value that a grid cell has
-    public void SetValue(int x, int y, int value)
+    public void SetValue(int x, int y, TGridObject value)
     {
         if (x >= 0 && x < width && y >= 0 && y < height)
         {
@@ -82,7 +82,7 @@ public class Grid
     }
 
     //sets the value of cell x,y to be a specific value :))
-    public void SetValue(Vector3 worldPosition, int value)
+    public void SetValue(Vector3 worldPosition, TGridObject value)
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
@@ -90,17 +90,17 @@ public class Grid
     }
 
     //gets the value of grid cell
-    public int GetValue(int x, int y)
+    public TGridObject GetValue(int x, int y)
     {
         if (x >= 0 && x < width && y >= 0 && y < height)
         {
             return gridArray[x, y];
         }
-        return -1;
+        return default(TGridObject); 
     }
 
     // returns the value of the grid cell we had pressed on
-    public int GetValue(Vector3 worldPosition)
+    public TGridObject GetValue(Vector3 worldPosition)
     {
         int x, y;
         GetXY(worldPosition, out x, out y);

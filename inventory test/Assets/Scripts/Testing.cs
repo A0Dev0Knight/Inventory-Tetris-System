@@ -8,6 +8,9 @@ public class Testing : MonoBehaviour
     Transform DebugSphere;
 
     [SerializeField]
+    Transform GridBackground;
+
+    [SerializeField]
     int ZMin = -10;
 
     [SerializeField]
@@ -15,16 +18,28 @@ public class Testing : MonoBehaviour
 
     Vector3 wordlPoseOfMouse;
 
-    private Grid grid;
+    private Grid<bool> grid;
     private void Start()
     {
-        grid = new Grid(3, 2, 1, Vector3.zero);
+        int width    = 5;
+        int height   = 5;
+        int cellSize = 1;
+
+        grid = new Grid<bool>(width, height, cellSize, Vector3.zero);
+
+        #region Background visual
+
+        GridBackground.Rotate(new Vector3(-90,0,0));
+        GridBackground.localScale= new Vector3(width*.1f,1,height*.1f)/cellSize;
+        GridBackground.position = new Vector3(width * .5f, height * .5f);
+
+        #endregion
     }
     private void Update()
     {
         if (Input.GetMouseButton(0))
         {
-            grid.SetValue(GetMousePos3D(), 100);
+            grid.SetValue(GetMousePos3D(), true);
         }
         else if (Input.GetMouseButton(1))
         {
