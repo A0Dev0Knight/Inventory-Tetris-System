@@ -8,15 +8,20 @@ public class Grid
     private int height;
     private float cellSize;
     private int[,] gridArray;
+
+    //note that the origin of a cell is still in the left down corner, this variable just
+    //offsets the original origin by x,y,z ammount
+    private Vector3 originPosition;
     private TextMesh[,] debugArray;
 
     //the constructor
-    public Grid(int width, int height, float cellSize)
+    public Grid(int width, int height, float cellSize, Vector3 originPosition)
     {
         //asign the values to the Grid object
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
+        this.originPosition = originPosition;
 
         //to have the values remembered somewhere
         gridArray = new int[width, height];
@@ -50,9 +55,10 @@ public class Grid
 
     //functions that hets the coordonates of the points in the grid and
     //fits them according to the size of the cell
+    //and originPosition fits the grid so that the orgin of cell 0,0 is on (0, 0, 0)
     private Vector3 GetWorldPosition(int x, int y)
     {
-        return new Vector3(x, y) * cellSize;
+        return new Vector3(x, y) * cellSize + originPosition;
     }
 
 
@@ -68,13 +74,14 @@ public class Grid
 
     }
 
-    //these two functions let ws press with the mouse on the grid and update the value of the grid
+    //these two functions let us press with the mouse on the grid and update the value of the grid
     //press in a square, poz of cursor gets rounded to an int and so the positon of the mouse is detected
     //to be inside a square of a grid
+    //also this function gets the coordonates of the cells we need to access
     private void GetXY(Vector3 worldposition, out int x, out int y)
     {
-        x = Mathf.FloorToInt(worldposition.x / cellSize);
-        y = Mathf.FloorToInt(worldposition.y / cellSize);
+        x = Mathf.FloorToInt((worldposition.x - originPosition.x) / cellSize);
+        y = Mathf.FloorToInt((worldposition.y - originPosition.y) / cellSize);
     }
     public void SetValue(Vector3 worldPosition, int value)
     {
