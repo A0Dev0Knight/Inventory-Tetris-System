@@ -34,8 +34,23 @@ public class GridBuildingSystem : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-
+            int x, z;
+            grid.GetXZ(GetMousePos3D(), out x, out z);
+            Instantiate(TestTransform, grid.GetWorldPosition(x,z), Quaternion.identity);
         }
     }
+
+    Vector3 wordlPoseOfMouse;
+
+    private Vector3 GetMousePos3D()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit other))
+        {
+            wordlPoseOfMouse = other.point;
+        }
+        return wordlPoseOfMouse;
+    }
+
 }
 

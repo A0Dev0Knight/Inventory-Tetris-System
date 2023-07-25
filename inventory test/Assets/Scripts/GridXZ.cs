@@ -62,7 +62,7 @@ public class GridXZ<TGridObject>
     /// originPosition fits the grid so that the orgin of cell 0,0 is wherever we want
     /// 
     /// </summary>
-    private Vector3 GetWorldPosition(int x, int z)
+    public Vector3 GetWorldPosition(int x, int z)
     {
         return new Vector3(x,0, z) * cellSize + originPosition;
     }
@@ -91,7 +91,7 @@ public class GridXZ<TGridObject>
     ///           a position of x=1,5 and y=2,9 is considered to be cell (1,2)
     ///           
     /// </summary>
-    private void GetXZ(Vector3 worldposition, out int x, out int Z)
+    public void GetXZ(Vector3 worldposition, out int x, out int Z)
     {
         x = Mathf.FloorToInt((worldposition.x - originPosition.x) / cellSize);
         Z = Mathf.FloorToInt((worldposition.z - originPosition.z) / cellSize);
