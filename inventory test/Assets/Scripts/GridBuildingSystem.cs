@@ -81,10 +81,21 @@ public class GridBuildingSystem : MonoBehaviour
             grid.GetXZ(GetMousePos3D(), out x, out z);
 
             List<Vector2Int> gridPositionList = BuildingToBePlaced.GetGridPositionList(new Vector2Int(x, z));
+
+            // Test if you can build
+            bool canBuild = true;
+            foreach( Vector2Int gridPosition in gridPositionList)
+            {
+                if (!grid.GetGridObject(gridPosition.x, gridPosition.y).CanBuild())
+                {
+                    canBuild = false;
+                    break;
+                }
+            }
             // an empty GridObject that stores the GridObject that is present in the grid at (X,Z)
             GridObject gridObject = grid.GetGridObject(x, z);
 
-            if (gridObject.CanBuild())
+            if (canBuild)
             {
                 /// <summary>
                 /// if we can build (AKA nothing is there already) we spawn the building where it needs to be

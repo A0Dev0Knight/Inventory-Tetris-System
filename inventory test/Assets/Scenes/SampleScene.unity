@@ -419,8 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6c196abe8263c4599bd09d7131f9b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TestTransform: {fileID: 3766119111384688151, guid: a8a9f371f57de5c4c88df53ea84d6bea,
-    type: 3}
+  BuildingToBePlaced: {fileID: 11400000, guid: 11b80ea63c3d3154ea0ea643bc9f6cd6, type: 2}
 --- !u!4 &1012511739
 Transform:
   m_ObjectHideFlags: 0
