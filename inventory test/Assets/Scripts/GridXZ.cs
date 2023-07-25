@@ -1,14 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-public class Grid<TGridObject>
+public class GridXZ<TGridObject>
 {
     // this is an event that is fired when a value in the grid is changed
     public event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
-    public class OnGridObjectChangedEventArgs :EventArgs
+    public class OnGridObjectChangedEventArgs : EventArgs
     {
         public int x;
-        public int y;
+        public int z;
 
     }
 
@@ -27,7 +27,7 @@ public class Grid<TGridObject>
     private Vector3 originPosition;
 
     //the constructor
-    public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject)
+    public GridXZ(int width, int height, float cellSize, Vector3 originPosition, Func<GridXZ<TGridObject>, int, int, TGridObject> createGridObject)
     {
         //asign the values to the Grid object
         this.width = width;
@@ -40,14 +40,14 @@ public class Grid<TGridObject>
 
         //drawing the grid on the screen
         for (int x = 0; x < gridArray.GetLength(0); x++)
-            for (int y = 0; y < gridArray.GetLength(1); y++)
+            for (int z = 0; z < gridArray.GetLength(1); z++)
             {
                 // draw the grid
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
+                Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.white, 100f);
+                Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x + 1, z), Color.white, 100f);
 
                 // initialize the original value of the grid's cell with a default value;
-                gridArray[x, y] = createGridObject(this, x,y);
+                gridArray[x, z] = createGridObject(this, x, z);
             }
 
         //Close the grid lines
@@ -62,26 +62,26 @@ public class Grid<TGridObject>
     /// originPosition fits the grid so that the orgin of cell 0,0 is wherever we want
     /// 
     /// </summary>
-    private Vector3 GetWorldPosition(int x, int y)
+    private Vector3 GetWorldPosition(int x, int z)
     {
-        return new Vector3(x, y) * cellSize + originPosition;
+        return new Vector3(x,0, z) * cellSize + originPosition;
     }
 
     #region Code that handles the set and get values of the grid
 
     //Code that modifys the value that a grid cell has
-    public void SetGridObject(int x, int y, TGridObject value)
+    public void SetGridObject(int x, int z, TGridObject value)
     {
-        if (x >= 0 && x < width && y >= 0 && y < height)
+        if (x >= 0 && x < width && z >= 0 && z < height)
         {
-            gridArray[x, y] = value;
+            gridArray[x, z] = value;
 
         }
     }
 
-    public void TriggerGridObjectChanged(int x, int y)
+    public void TriggerGridObjectChanged(int x, int z)
     {
-        if (OnGridObjectChanged != null) OnGridObjectChanged(this, new OnGridObjectChangedEventArgs { x = x, y = y });
+        if (OnGridObjectChanged != null) OnGridObjectChanged(this, new OnGridObjectChangedEventArgs { x = x, z = z });
     }
 
     /// <summary>
@@ -91,36 +91,36 @@ public class Grid<TGridObject>
     ///           a position of x=1,5 and y=2,9 is considered to be cell (1,2)
     ///           
     /// </summary>
-    private void GetXY(Vector3 worldposition, out int x, out int y)
+    private void GetXZ(Vector3 worldposition, out int x, out int Z)
     {
         x = Mathf.FloorToInt((worldposition.x - originPosition.x) / cellSize);
-        y = Mathf.FloorToInt((worldposition.y - originPosition.y) / cellSize);
+        Z = Mathf.FloorToInt((worldposition.z - originPosition.z) / cellSize);
     }
 
     //sets the value of cell x,y to be a specific value :))
     public void SetGridObject(Vector3 worldPosition, TGridObject value)
     {
-        int x, y;
-        GetXY(worldPosition, out x, out y);
-        SetGridObject(x, y, value);
+        int x, z;
+        GetXZ(worldPosition, out x, out z);
+        SetGridObject(x, z, value);
     }
 
     //gets the value of grid cell
-    public TGridObject GetGridObject(int x, int y)
+    public TGridObject GetGridObject(int x, int z)
     {
-        if (x >= 0 && x < width && y >= 0 && y < height)
+        if (x >= 0 && x < width && z >= 0 && z < height)
         {
-            return gridArray[x, y];
+            return gridArray[x, z];
         }
-        return default(TGridObject); 
+        return default(TGridObject);
     }
 
     // returns the value of the grid cell we had pressed on
     public TGridObject GetGridObject(Vector3 worldPosition)
     {
-        int x, y;
-        GetXY(worldPosition, out x, out y);
-        return GetGridObject(x, y);
+        int x, z;
+        GetXZ(worldPosition, out x, out z);
+        return GetGridObject(x, z);
     }
 
     #endregion

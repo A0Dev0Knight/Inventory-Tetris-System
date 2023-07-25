@@ -18,14 +18,14 @@ public class Testing : MonoBehaviour
 
     Vector3 wordlPoseOfMouse;
 
-    private Grid<TestingClass> grid;
+    private GridXZ<TestingClass> grid;
     private void Start()
     {
         int width    = 5;
         int height   = 5;
         int cellSize = 1;
 
-        grid = new Grid<TestingClass>(width, height, cellSize, Vector3.zero, (Grid<TestingClass> g, int x, int y) => new TestingClass(g,x,y));
+        grid = new GridXZ<TestingClass>(width, height, cellSize, Vector3.zero, (GridXZ<TestingClass> g, int x, int y) => new TestingClass(g,x,y));
 
         #region Background visual
 
@@ -91,10 +91,10 @@ public class Testing : MonoBehaviour
 //this is a class used for testing the generic class Grid
 public class TestingClass
 {
-    private Grid<TestingClass> grid;
+    private GridXZ<TestingClass> grid;
     private int value;
     private int x, y;
-    public TestingClass(Grid<TestingClass> grid, int x, int y)
+    public TestingClass(GridXZ<TestingClass> grid, int x, int y)
     {
         this.grid = grid;
         this.x    = x;
