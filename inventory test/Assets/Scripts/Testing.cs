@@ -18,14 +18,14 @@ public class Testing : MonoBehaviour
 
     Vector3 wordlPoseOfMouse;
 
-    private Grid<bool> grid;
+    private Grid<TestingClass> grid;
     private void Start()
     {
         int width    = 5;
         int height   = 5;
         int cellSize = 1;
 
-        grid = new Grid<bool>(width, height, cellSize, Vector3.zero);
+        grid = new Grid<TestingClass>(width, height, cellSize, Vector3.zero, (Grid<TestingClass> g, int x, int y) => new TestingClass(g,x,y));
 
         #region Background visual
 
@@ -39,11 +39,18 @@ public class Testing : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            grid.SetValue(GetMousePos3D(), true);
+            //if the initil value os null we add a value
+            TestingClass test = grid.GetGridObject(GetMousePos3D());
+
+            if (test != null)
+            {
+                test.AddValue(45);
+            }
+            //grid.SetGridObject(GetMousePos3D(), null);
         }
         else if (Input.GetMouseButton(1))
         {
-            grid.GetValue(GetMousePos3D());
+             grid.GetGridObject(GetMousePos3D());
         }
     }
 
@@ -79,4 +86,23 @@ public class Testing : MonoBehaviour
     }
     */
     #endregion
+}
+
+//this is a class used for testing the generic class Grid
+public class TestingClass
+{
+    private Grid<TestingClass> grid;
+    private int value;
+    private int x, y;
+    public TestingClass(Grid<TestingClass> grid, int x, int y)
+    {
+        this.grid = grid;
+        this.x    = x;
+        this.y    = y;
+    }
+    public void AddValue(int addvalue)
+    {
+        value += addvalue;
+        grid.TriggerGridObjectChanged(x,y);
+    }
 }

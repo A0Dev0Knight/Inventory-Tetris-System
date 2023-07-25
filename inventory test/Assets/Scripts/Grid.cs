@@ -1,7 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Grid<TGridObject>
 {
+    // this is an event that is fired when a value in the grid is changed
+    public event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
+    public class OnGridObjectChangedEventArgs :EventArgs
+    {
+        public int x;
+        public int y;
+
+    }
+
     //parameters of the grid
     private int width;
     private int height;
@@ -17,7 +27,7 @@ public class Grid<TGridObject>
     private Vector3 originPosition;
 
     //the constructor
-    public Grid(int width, int height, float cellSize, Vector3 originPosition)
+    public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<Grid<TGridObject>, int, int, TGridObject> createGridObject)
     {
         //asign the values to the Grid object
         this.width = width;
@@ -36,8 +46,8 @@ public class Grid<TGridObject>
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
 
-                // initialize the original value of the grid's cell with 0;
-                Debug.Log(gridArray[x, y]);
+                // initialize the original value of the grid's cell with a default value;
+                gridArray[x, y] = createGridObject(this, x,y);
             }
 
         //Close the grid lines
@@ -60,12 +70,18 @@ public class Grid<TGridObject>
     #region Code that handles the set and get values of the grid
 
     //Code that modifys the value that a grid cell has
-    public void SetValue(int x, int y, TGridObject value)
+    public void SetGridObject(int x, int y, TGridObject value)
     {
         if (x >= 0 && x < width && y >= 0 && y < height)
         {
             gridArray[x, y] = value;
+
         }
+    }
+
+    public void TriggerGridObjectChanged(int x, int y)
+    {
+        if (OnGridObjectChanged != null) OnGridObjectChanged(this, new OnGridObjectChangedEventArgs { x = x, y = y });
     }
 
     /// <summary>
@@ -82,15 +98,15 @@ public class Grid<TGridObject>
     }
 
     //sets the value of cell x,y to be a specific value :))
-    public void SetValue(Vector3 worldPosition, TGridObject value)
+    public void SetGridObject(Vector3 worldPosition, TGridObject value)
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
-        SetValue(x, y, value);
+        SetGridObject(x, y, value);
     }
 
     //gets the value of grid cell
-    public TGridObject GetValue(int x, int y)
+    public TGridObject GetGridObject(int x, int y)
     {
         if (x >= 0 && x < width && y >= 0 && y < height)
         {
@@ -100,11 +116,11 @@ public class Grid<TGridObject>
     }
 
     // returns the value of the grid cell we had pressed on
-    public TGridObject GetValue(Vector3 worldPosition)
+    public TGridObject GetGridObject(Vector3 worldPosition)
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
-        return GetValue(x, y);
+        return GetGridObject(x, y);
     }
 
     #endregion
