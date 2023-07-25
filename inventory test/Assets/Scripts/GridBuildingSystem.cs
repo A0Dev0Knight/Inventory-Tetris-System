@@ -80,6 +80,7 @@ public class GridBuildingSystem : MonoBehaviour
             int x, z;
             grid.GetXZ(GetMousePos3D(), out x, out z);
 
+            List<Vector2Int> gridPositionList = BuildingToBePlaced.GetGridPositionList(new Vector2Int(x, z));
             // an empty GridObject that stores the GridObject that is present in the grid at (X,Z)
             GridObject gridObject = grid.GetGridObject(x, z);
 
@@ -88,9 +89,16 @@ public class GridBuildingSystem : MonoBehaviour
                 /// <summary>
                 /// if we can build (AKA nothing is there already) we spawn the building where it needs to be
                 /// and we notify the Grid class that a change was made
+                /// 
+                /// NOTE: we instantiate only once the prefab!
                 /// </summary>
                 Transform buildTransform = Instantiate(BuildingToBePlaced.prefab, grid.GetWorldPosition(x, z), Quaternion.identity);
-                gridObject.SetTransform(buildTransform);
+                
+                // for every single X and Z in the gridPosition list we set the GridObject value in our grid as being in use
+                foreach (Vector2Int gridPosition in gridPositionList)
+                { 
+                    grid.GetGridObject(gridPosition.x, gridPosition.y).SetTransform(buildTransform);
+                }
             }
             else Debug.Log("You can not build here!"); //else we display a message
         }
