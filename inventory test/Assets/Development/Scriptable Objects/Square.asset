@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Square building
   prefab: {fileID: 5096789915631447242, guid: 6b330b166ee9aba45badf26d4ac7bcee, type: 3}
-  sizeX: 1
-  sizeZ: 1
+  height: 1
+  width: 1

@@ -419,7 +419,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6c196abe8263c4599bd09d7131f9b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildingToBePlaced: {fileID: 11400000, guid: 11b80ea63c3d3154ea0ea643bc9f6cd6, type: 2}
+  BuildingList:
+  - {fileID: 11400000, guid: 9f85ef2083d53d34e900e2359c7a6a1e, type: 2}
+  - {fileID: 11400000, guid: ab61a7f3867dacd48a733446f28b29d4, type: 2}
+  - {fileID: 11400000, guid: 11b80ea63c3d3154ea0ea643bc9f6cd6, type: 2}
 --- !u!4 &1012511739
 Transform:
   m_ObjectHideFlags: 0

@@ -54,7 +54,7 @@ public class GridBuildingSystem : MonoBehaviour
         private int x, z;
         
         // we get the transform AKA the building that is set on the (X,Z) coordinates
-        private Transform transform;
+        private PlacedObjects placedObject;
 
         // we construct the GridObject object
         public GridObject(GridXZ<GridObject> grid, int x, int z)
@@ -65,23 +65,27 @@ public class GridBuildingSystem : MonoBehaviour
         }
 
         // we set the value of the transform of this object to the instance of the building prefab
-        public void SetTransform(Transform transform)
+        public void SetPlacedObject(PlacedObjects placedObject)
         {
-            this.transform = transform;
+            this.placedObject = placedObject;
             grid.TriggerGridObjectChanged(x, z);
         }
 
         // this function clears the GridObject i think, this part i have not yet understood
-        public void ClearTransform()
+        public void ClearPlacedObject()
         {
-            transform = null;
+            placedObject = null;
         }
         
+        public PlacedObjects GetPlacedObject()
+        {
+            return placedObject;
+        }
         // check if we can build on the respective cell
         public bool CanBuild()
         {
             // if condition below is true we can build else we cannot build
-            return transform == null;
+            return placedObject == null;
         }
     }
 
@@ -114,33 +118,44 @@ public class GridBuildingSystem : MonoBehaviour
                 Vector2Int rotationOffset = BuildingToBePlaced.GetRotationOffset(dir);
                 Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + 
                                                     new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+
+                PlacedObjects placedObject = PlacedObjects.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, BuildingToBePlaced);
                 /// <summary>
                 /// if we can build (AKA nothing is there already) we spawn the building where it needs to be
                 /// and we notify the Grid class that a change was made
                 /// 
                 /// NOTE: we instantiate only once the prefab!
                 /// </summary>
-                Transform buildTransform = Instantiate(
-                                                       BuildingToBePlaced.prefab,
-                                                       placedObjectWorldPosition,
-                                                       Quaternion.Euler(0, BuildingToBePlaced.GetRotationAngle(dir), 0)
-                                                       );
                 
                 // for every single X and Z in the gridPosition list we set the GridObject value in our grid as being in use
                 foreach (Vector2Int gridPosition in gridPositionList)
                 { 
-                    grid.GetGridObject(gridPosition.x, gridPosition.y).SetTransform(buildTransform);
+                    grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
                 }
             }
             else Debug.Log("You can not build here!"); //else we display a message
         }
 
-        // rotation of buidings and placement of multiple buildings
+        // rotation of buidings and placement of multiple buildings and demolish of the building
         Controls();
     }
 
     private void Controls()
     {
+        if(Input.GetMouseButtonDown(1))
+        {
+            GridObject gridObject = grid.GetGridObject(GetMousePos3D());
+            PlacedObjects placedObject = gridObject.GetPlacedObject();
+            if (placedObject != null)
+            {
+                placedObject.DestroySelf();
+            }
+            List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
+            foreach (Vector2Int gridPosition in gridPositionList)
+            {
+                grid.GetGridObject(gridPosition.x, gridPosition.y).ClearPlacedObject();
+            }
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             dir = PlaceObjectTypesSO.GetNextDir(dir);
@@ -148,7 +163,7 @@ public class GridBuildingSystem : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) { BuildingToBePlaced = BuildingList[1]; }
         if (Input.GetKeyDown(KeyCode.Alpha2)) { BuildingToBePlaced = BuildingList[2]; }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { BuildingToBePlaced = BuildingList[3]; }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { BuildingToBePlaced = BuildingList[0]; }
 
     }
     #region This part of code is responsible for getting the mouse position in 3D space

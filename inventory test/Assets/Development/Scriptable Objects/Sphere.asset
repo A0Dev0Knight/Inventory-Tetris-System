@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Sphere building
   prefab: {fileID: 5639380093051597335, guid: 2ad8936b200a20c45b96f96f895d897b, type: 3}
-  sizeX: 2
-  sizeZ: 2
+  height: 2
+  width: 2

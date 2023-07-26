@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Rectangle building
   prefab: {fileID: 3766119111384688151, guid: a8a9f371f57de5c4c88df53ea84d6bea, type: 3}
-  sizeX: 1
-  sizeZ: 2
+  height: 1
+  width: 2
