@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class GridBuildingSystem : MonoBehaviour
 {
+    #region Variables
     // reference to building prefab
     [SerializeField] PlaceObjectTypesSO BuildingToBePlaced;
 
     // initialize the grid object that stores GridObject things
     private GridXZ<GridObject> grid;
 
+    // the current direction we are building on
+    private PlaceObjectTypesSO.Dir dir = PlaceObjectTypesSO.Dir.Down;
+
+    #endregion
+    
     //give the grid that was mentioned up a width a height and a cell size
     private void Awake()
     {
@@ -80,7 +86,7 @@ public class GridBuildingSystem : MonoBehaviour
             int x, z;
             grid.GetXZ(GetMousePos3D(), out x, out z);
 
-            List<Vector2Int> gridPositionList = BuildingToBePlaced.GetGridPositionList(new Vector2Int(x, z));
+            List<Vector2Int> gridPositionList = BuildingToBePlaced.GetGridPositionList(new Vector2Int(x, z), dir);
 
             // Test if you can build
             bool canBuild = true;
@@ -97,13 +103,20 @@ public class GridBuildingSystem : MonoBehaviour
 
             if (canBuild)
             {
+                Vector2Int rotationOffset = BuildingToBePlaced.GetRotationOffset(dir);
+                Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + 
+                                                    new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
                 /// <summary>
                 /// if we can build (AKA nothing is there already) we spawn the building where it needs to be
                 /// and we notify the Grid class that a change was made
                 /// 
                 /// NOTE: we instantiate only once the prefab!
                 /// </summary>
-                Transform buildTransform = Instantiate(BuildingToBePlaced.prefab, grid.GetWorldPosition(x, z), Quaternion.identity);
+                Transform buildTransform = Instantiate(
+                                                       BuildingToBePlaced.prefab,
+                                                       placedObjectWorldPosition,
+                                                       Quaternion.Euler(0, BuildingToBePlaced.GetRotationAngle(dir), 0)
+                                                       );
                 
                 // for every single X and Z in the gridPosition list we set the GridObject value in our grid as being in use
                 foreach (Vector2Int gridPosition in gridPositionList)
@@ -112,6 +125,11 @@ public class GridBuildingSystem : MonoBehaviour
                 }
             }
             else Debug.Log("You can not build here!"); //else we display a message
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            dir = PlaceObjectTypesSO.GetNextDir(dir);
         }
     }
 

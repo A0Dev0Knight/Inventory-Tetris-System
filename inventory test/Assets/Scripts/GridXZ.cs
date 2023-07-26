@@ -54,7 +54,10 @@ public class GridXZ<TGridObject>
         Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
         Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
     }
-
+    public float GetCellSize()
+    {
+        return cellSize;
+    }
     /// <summary>
     /// 
     /// functions that geets the coordonates of the points in the grid
