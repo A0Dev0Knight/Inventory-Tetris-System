@@ -5,8 +5,11 @@ using UnityEngine;
 public class GridBuildingSystem : MonoBehaviour
 {
     #region Variables
-    // reference to building prefab
-    [SerializeField] PlaceObjectTypesSO BuildingToBePlaced;
+    // reference to building prefabs
+    [SerializeField] List<PlaceObjectTypesSO> BuildingList;
+
+    // the curent prefab we are working with
+    private PlaceObjectTypesSO BuildingToBePlaced;
 
     // initialize the grid object that stores GridObject things
     private GridXZ<GridObject> grid;
@@ -19,9 +22,14 @@ public class GridBuildingSystem : MonoBehaviour
     //give the grid that was mentioned up a width a height and a cell size
     private void Awake()
     {
+        #region Initialise variables
+
+        BuildingToBePlaced = BuildingList[0];
         int gridWidth = 10;
         int gridHeight = 10;
         float gridCellsize = 10;
+
+        #endregion
 
         /// <summary>
         /// 
@@ -29,7 +37,7 @@ public class GridBuildingSystem : MonoBehaviour
         ///         - a width
         ///         - a height
         ///         - a cell size
-        ///         - an original (position which is 0 for now)
+        ///         - an origin offset (position which is 0 for now)
         ///         - defaults for the grid (i have not understood the part with Func entirely)
         /// </summary>
         grid = new GridXZ<GridObject>(gridWidth, gridHeight, gridCellsize, Vector3.zero,
@@ -127,12 +135,22 @@ public class GridBuildingSystem : MonoBehaviour
             else Debug.Log("You can not build here!"); //else we display a message
         }
 
+        // rotation of buidings and placement of multiple buildings
+        Controls();
+    }
+
+    private void Controls()
+    {
         if (Input.GetKeyDown(KeyCode.R))
         {
             dir = PlaceObjectTypesSO.GetNextDir(dir);
         }
-    }
 
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { BuildingToBePlaced = BuildingList[1]; }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { BuildingToBePlaced = BuildingList[2]; }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { BuildingToBePlaced = BuildingList[3]; }
+
+    }
     #region This part of code is responsible for getting the mouse position in 3D space
     Vector3 wordlPoseOfMouse;
 
